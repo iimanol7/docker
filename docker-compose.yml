@@ -1,0 +1,44 @@
+version: '3.8'  # O versión compatible con tus herramientas
+
+services:
+  app:
+    build:                  # Imagen a partir de un dockerfile
+      context: ./servicio              # carpeta base desde donde el Dockerfile puede acceder a los archivos (COPY)
+      dockerfile: Dockerfile # Ruta y Nombre del Dockerfile si no es por defecto, relativo al context
+    container_name: mi_app
+    ports:
+      - "3000:3000"           # host:contenedor
+    volumes:
+      - .:/app                # se vincula con el directorio local especificado y se reflejan los cambios en ambos
+      # Normalmente cuando queremos que los archivos del proyecto sean los mismos que tenemos en local, dinamicos
+      - app_data:/app/data    # Volumen persistente (nombre:ruta/de/montaje)
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+    networks:
+      - appnet
+    depends_on:       # Hace que un servicio espere a que otro se inicie primero antes de arrancar.
+      - db            # Nombre del servicio definido aquí
+    restart: unless-stopped   # O "always", "on-failure", etc.
+
+    command: npm run dev && otrocomando      # Sobrescribir CMD
+
+  db:
+    image: postgres:15
+    container_name: mi_postgres
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=mi_base
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - appnet
+
+volumes:
+  db_data:     # Volumen para base de datos
+  app_data:    # Volumen para la app
+
+networks:
+  appnet:      # Red personalizada para comunicar servicios

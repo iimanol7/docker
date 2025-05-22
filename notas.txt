@@ -1,0 +1,17 @@
+
+con el nombre del contenedor puedes acceder a el (curl, ping...)
+
+los contenedores los añades a la misma red y ya, no tienes que configurarlo
+
+La ruta del volumen no es al azar, la especifica la imagen o servicio, comprobar en documentacion
+
+para las webs usar nginx
+
+cuando se hace el dockerfile y se ejecuta el build, se crea la imagen. para correrla se usa con 'docker run' 
+y todos los demas parametros
+
+El docker compose va en la raiz del proyecto. En la raiz estarán cada servicio con su carpeta y su dockerfile
+
+el WORKDIR solo se utiliza en servicios donde no haya un directorio preconfigurado y haya que lanzar comandos, 
+como node js por ejemplo
+en apache y nginx no haria falta porque ya hay uno por defecto 

@@ -1,0 +1,41 @@
+version: '3.8'  # Versión del esquema de Compose
+
+services:
+  app:
+    image: node:20  # Usamos imagen oficial de Node.js
+    container_name: mi_node_app  # Nombre personalizado del contenedor
+    working_dir: /app  # Carpeta de trabajo dentro del contenedor
+    volumes:
+      - .:/app  # Monta el código local en /app del contenedor
+    command: sh -c "npm install && npm start"  
+    # Instala dependencias y luego arranca la app
+    ports:
+      - "3000:3000"  # Mapea puerto 3000 del host al contenedor
+    environment:
+      - NODE_ENV=development  # Variables de entorno para Node
+      - PORT=3000
+    depends_on:
+      - db  # Espera que 'db' esté listo antes de iniciar
+    networks:
+      - red_app  # Red compartida con el servicio 'db'
+
+  db:
+    image: postgres:15  # Imagen oficial de PostgreSQL
+    container_name: mi_postgres
+    environment:
+      - POSTGRES_DB=mi_base         # Nombre de la base de datos
+      - POSTGRES_USER=usuario       # Usuario de la base
+      - POSTGRES_PASSWORD=secreta   # Contraseña de la base
+    volumes:
+      - db_data:/var/lib/postgresql/data  
+      # Volumen persistente para guardar los datos
+    ports:
+      - "5432:5432"  # Puerto de PostgreSQL
+    networks:
+      - red_app  # Misma red que 'app' para que puedan comunicarse
+
+volumes:
+  db_data:  # Define el volumen para datos de PostgreSQL
+
+networks:
+  red_app:  # Red virtual privada para los servicios
