@@ -12,6 +12,7 @@ y todos los demas parametros
 
 El docker compose va en la raiz del proyecto. En la raiz estarán cada servicio con su carpeta y su dockerfile
 
-el WORKDIR solo se utiliza en servicios donde no haya un directorio preconfigurado y haya que lanzar comandos, 
-como node js por ejemplo
+el WORKDIR solo se utiliza:
+- para no poner todo el rato rutas absolutas
+- en servicios donde no haya un directorio preconfigurado y haya que lanzar comandos, como node js por ejemplo
 en apache y nginx no haria falta porque ya hay uno por defecto 
